@@ -1,6 +1,12 @@
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -11,57 +17,68 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public abstract class GraphTroncons {
+public class GraphTroncons {
 
-	protected Map<String, Airport> correspondanceIataAirport ;
+	protected Map<Ligne, Troncon> correspondanceIataAirport;
 
-	public GraphTroncons()  {
-		correspondanceIataAirport= new HashMap<String, Airport>();
+
+	public GraphTroncons(File lignes, File troncons) throws Exception {
+		constructLigneFromTXT(lignes);
+		constructTronconFromTXT(troncons);
 	}
 	
-	public void constructFromXML (String xmlFile)throws Exception {
-		File xml = new File(xmlFile);
-		DocumentBuilderFactory docBuildFact = DocumentBuilderFactory.newInstance();
-		DocumentBuilder docBuild = docBuildFact.newDocumentBuilder();
-		Document doc = docBuild.parse(xml);
-		NodeList airports = doc.getElementsByTagName("airport");
-		for (int i = 0; i < airports.getLength(); i++) {
-			Node airport = airports.item(i);
-			Element elAirport = (Element) airport;
-			String iata = elAirport.getAttribute("iata");
-			String name = elAirport.getAttribute("name");
-			Airport a = new Airport(iata, name);
-			correspondanceIataAirport.put(iata, a);
-			ajouterSommet(a);
-		}
-		for (int i = 0; i < airports.getLength(); i++) {
-			Node airport = airports.item(i);
-			Element elAirport = (Element) airport;
-			String iata = elAirport.getAttribute("iata");
-			NodeList flights = elAirport.getElementsByTagName("flight");
-			for (int j = 0; j < flights.getLength(); j++) {
-				Node flight = flights.item(j);
-				Element elFlight = (Element) flight;
-				String dest = elFlight.getTextContent();
-				String airline = elFlight.getAttribute("airline");
-				Flight f = new Flight(correspondanceIataAirport.get(iata), correspondanceIataAirport.get(dest),
-						airline);
-				ajouterArc(f);
+	public void constructLigneFromTXT(File file) throws Exception {
+		try {
+			Scanner scanner = new Scanner(file);
+
+			while (scanner.hasNextLine()) {
+				String ligne = scanner.nextLine();
+				String[] attributs = ligne.split(",");
+
+				int id = Integer.parseInt(attributs[0]);
+				String numero = attributs[1];
+				Station stationDepart = new Station(attributs[2]);
+				Station stationArrive = new Station(attributs[3]);
+				String typeTransport = attributs[4];
+				int dureeTroncon = Integer.parseInt(attributs[5]);
+
+				Ligne ligneInstance = new Ligne(id, numero, stationDepart, stationArrive, typeTransport, dureeTroncon);
+				System.out.println(ligneInstance.toString());
 			}
+
+			scanner.close();
+		} catch (FileNotFoundException e) {
+			System.out.println("Le fichier n'a pas été trouvé.");
 		}
-	}
-	
-	public Airport getAirport(String iata) {
-		return correspondanceIataAirport.get(iata);
+
 	}
 
-	protected abstract void ajouterSommet(Airport a);
 
-	protected abstract void ajouterArc(Flight f);
-	
-	public abstract Set<Flight> arcsSortants(Airport a);
+	public void constructTronconFromTXT(File file) throws Exception {
+		try {
+			Scanner scanner = new Scanner(file);
 
-	public abstract boolean sontAdjacents(Airport a1, Airport a2);
+			while (scanner.hasNextLine()) {
+				String ligne = scanner.nextLine();
+				String[] attributs = ligne.split(",");
+
+				int numeroLigne = Integer.parseInt(attributs[0]);
+				Station stationDepart = new Station(attributs[1]);
+				Station stationArrive = new Station(attributs[2]);
+				int dureeTroncon = Integer.parseInt(attributs[3]);
+
+				Troncon tronconInstance = new Troncon(numeroLigne, stationDepart, stationArrive, dureeTroncon);
+				System.out.println(tronconInstance.toString());
+			}
+
+			scanner.close();
+		} catch (FileNotFoundException e) {
+			System.out.println("Le fichier n'a pas été trouvé.");
+		}
+
+	}
+
+
 	
 
 }
