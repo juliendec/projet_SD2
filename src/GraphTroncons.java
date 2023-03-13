@@ -3,14 +3,18 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.util.ArrayList;
+import java.util.Deque;
 import java.util.Formatter;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 
+import java.util.SortedSet;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -21,12 +25,14 @@ import org.w3c.dom.NodeList;
 
 public class GraphTroncons {
 
-	protected Map<Ligne, Troncon> correspondanceIataAirport;
+	protected Map<Ligne, Set<Troncon> > ligneTronconMap;
 
 	private Map<Station, Set<Troncon> > stationTronconMap;
 
 
 	public GraphTroncons(File lignes, File troncons) throws Exception {
+		this.stationTronconMap = new HashMap<>();
+		this.ligneTronconMap = new HashMap<>();
 		constructLigneFromTXT(lignes);
 		constructTronconFromTXT(troncons);
 	}
@@ -92,9 +98,57 @@ public class GraphTroncons {
 	}
 
 
+	//bfs
+	List<Troncon> calculerCheminMinimisantNombreTroncons(String stationDepart, String stationDestination){
+		Station stationDep = new Station(stationDepart);
+		Station stationDes = new Station(stationDestination);
+
+		HashMap<Station,Station> provenance = new HashMap<>();
+		List<Troncon> tronconList = new LinkedList<>();
+		LinkedList<Station> file = new LinkedList<>();
+		Set<Station> visite = new HashSet<>();
+		Station stationActuelleDepart = stationDep;
+		Station stationActuelleDest = new Station(null);
+
+		visite.add(stationActuelleDepart);
+
+		while (!stationActuelleDest.equals(stationDes)) {
+
+			for (Troncon troncon : stationTronconMap.get(stationActuelleDepart)) {
+				stationActuelleDest = troncon.getStationDestination();
+				if (!visite.contains(stationActuelleDest)) {
+					file.add(stationActuelleDest);
+					visite.add(stationActuelleDest);
+					provenance.put(stationActuelleDest,stationActuelleDepart);
+				}
+			}
+			stationActuelleDepart = file.removeFirst();
+		}
+
+
+		while (){
+
+			tronconList.add(stationTronconMap.get(stationActu).)
+		}
+
+		afficherList(tronconList);
+		return tronconList;
+	}
 
 
 
+		//djikstra
+	List<Troncon> calculerCheminMinimisantTempsTransport(Station stationDepart, Station stationDestination){
+	return null;
+	}
 
+
+
+	void afficherList(List<Troncon> list){
+
+		for (Troncon troncon : list) {
+			System.out.println(troncon.toString());
+		}
+	}
 
 }

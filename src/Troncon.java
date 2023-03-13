@@ -27,4 +27,14 @@ public class Troncon {
   public int getDureeTroncon() {
     return dureeTroncon;
   }
+
+  @Override
+  public String toString() {
+    return "Troncon{ " +
+        "numeroLigne= " + numeroLigne +
+        ", stationDepart= " + stationDepart +
+        ", stationDestination= " + stationDestination +
+        ", dureeTroncon= " + dureeTroncon +
+        "}\n";
+  }
 }
