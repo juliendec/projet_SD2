@@ -26,7 +26,7 @@ public class GraphTroncons {
 		constructLigneFromTXT(lignes);
 		constructTronconFromTXT(troncons);
 	}
-	
+
 	public void constructLigneFromTXT(File file) throws Exception {
 		try {
 			Scanner scanner = new Scanner(file);
@@ -79,6 +79,6 @@ public class GraphTroncons {
 	}
 
 
-	
+
 
 }
