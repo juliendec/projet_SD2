@@ -23,4 +23,9 @@ public class Station {
   public int hashCode() {
     return Objects.hash(nomStation);
   }
+
+  @Override
+  public String toString() {
+    return "nom station: " + nomStation +' ';
+  }
 }

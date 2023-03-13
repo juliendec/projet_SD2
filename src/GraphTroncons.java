@@ -56,7 +56,7 @@ public class GraphTroncons {
 
 
 
-				System.out.println(ligneInstance.toString());
+			//	System.out.println(ligneInstance.toString());
 			}
 
 			scanner.close();
@@ -87,7 +87,7 @@ public class GraphTroncons {
 				stationTronconMap.get(tronconInstance.getStationDepart()).add(tronconInstance);
 
 
-				System.out.println(tronconInstance.toString());
+			//	System.out.println(tronconInstance.toString());
 			}
 
 			scanner.close();
@@ -99,40 +99,48 @@ public class GraphTroncons {
 
 
 	//bfs
-	List<Troncon> calculerCheminMinimisantNombreTroncons(String stationDepart, String stationDestination){
+	Deque<Troncon> calculerCheminMinimisantNombreTroncons(String stationDepart, String stationDestination){
 		Station stationDep = new Station(stationDepart);
 		Station stationDes = new Station(stationDestination);
 
-		HashMap<Station,Station> provenance = new HashMap<>();
-		List<Troncon> tronconList = new LinkedList<>();
+		HashMap<Station,Troncon> provenance = new HashMap<>();
 		LinkedList<Station> file = new LinkedList<>();
 		Set<Station> visite = new HashSet<>();
-		Station stationActuelleDepart = stationDep;
-		Station stationActuelleDest = new Station(null);
+		visite.add(stationDep);
+		file.addLast(stationDep);
 
-		visite.add(stationActuelleDepart);
-
-		while (!stationActuelleDest.equals(stationDes)) {
-
+		while (!visite.contains(stationDes)) {
+			Station stationActuelleDepart = file.removeFirst();
 			for (Troncon troncon : stationTronconMap.get(stationActuelleDepart)) {
-				stationActuelleDest = troncon.getStationDestination();
+				Station stationActuelleDest = troncon.getStationDestination();
 				if (!visite.contains(stationActuelleDest)) {
 					file.add(stationActuelleDest);
 					visite.add(stationActuelleDest);
-					provenance.put(stationActuelleDest,stationActuelleDepart);
+					provenance.put(stationActuelleDest,troncon);
 				}
 			}
-			stationActuelleDepart = file.removeFirst();
 		}
 
 
-		while (){
 
-			tronconList.add(stationTronconMap.get(stationActu).)
+		Deque<Troncon> tronconList = new LinkedList<>();
+		Station stationtemp = stationDes;
+		Station stationTempDest = null;
+
+		while (stationtemp.equals(stationDep)){
+			stationTempDest = provenance.get(stationtemp).getStationDepart();
+			for (Troncon troncon : stationTronconMap.get(stationTempDest)) {
+				if (troncon.getStationDestination().equals(stationtemp)){
+					tronconList.addFirst(troncon);
+					System.out.println(troncon.getStationDepart().toString());
+				}
+			}
+			stationtemp = stationTempDest;
 		}
 
-		afficherList(tronconList);
-		return tronconList;
+		//afficherDeque(tronconList);
+
+		return null;
 	}
 
 
@@ -144,9 +152,9 @@ public class GraphTroncons {
 
 
 
-	void afficherList(List<Troncon> list){
+	void afficherDeque(Deque<Troncon> deque){
 
-		for (Troncon troncon : list) {
+		for (Troncon troncon : deque) {
 			System.out.println(troncon.toString());
 		}
 	}
