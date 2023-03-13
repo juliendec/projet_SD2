@@ -11,4 +11,20 @@ public class Troncon {
     this.stationDestination = stationDestination;
     this.dureeTroncon = dureeTroncon;
   }
+
+  public int getNumeroLigne() {
+    return numeroLigne;
+  }
+
+  public Station getStationDepart() {
+    return stationDepart;
+  }
+
+  public Station getStationDestination() {
+    return stationDestination;
+  }
+
+  public int getDureeTroncon() {
+    return dureeTroncon;
+  }
 }

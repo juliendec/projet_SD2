@@ -5,6 +5,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.Formatter;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
@@ -20,6 +22,8 @@ import org.w3c.dom.NodeList;
 public class GraphTroncons {
 
 	protected Map<Ligne, Troncon> correspondanceIataAirport;
+
+	private Map<Station, Set<Troncon> > stationTronconMap;
 
 
 	public GraphTroncons(File lignes, File troncons) throws Exception {
@@ -43,6 +47,9 @@ public class GraphTroncons {
 				int dureeTroncon = Integer.parseInt(attributs[5]);
 
 				Ligne ligneInstance = new Ligne(id, numero, stationDepart, stationArrive, typeTransport, dureeTroncon);
+
+
+
 				System.out.println(ligneInstance.toString());
 			}
 
@@ -68,6 +75,12 @@ public class GraphTroncons {
 				int dureeTroncon = Integer.parseInt(attributs[3]);
 
 				Troncon tronconInstance = new Troncon(numeroLigne, stationDepart, stationArrive, dureeTroncon);
+				if (!stationTronconMap.containsKey(tronconInstance.getStationDepart())){
+					stationTronconMap.put(tronconInstance.getStationDepart(),new HashSet<>());
+				}
+				stationTronconMap.get(tronconInstance.getStationDepart()).add(tronconInstance);
+
+
 				System.out.println(tronconInstance.toString());
 			}
 
@@ -77,6 +90,9 @@ public class GraphTroncons {
 		}
 
 	}
+
+
+
 
 
 
