@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.Formatter;
@@ -109,7 +110,7 @@ public class GraphTroncons {
 		visite.add(stationDep);
 		file.addLast(stationDep);
 
-		while (!visite.contains(stationDes)) {
+		while (!visite.contains(stationDes) && !file.isEmpty()) {
 			Station stationActuelleDepart = file.removeFirst();
 			for (Troncon troncon : stationTronconMap.get(stationActuelleDepart)) {
 				Station stationActuelleDest = troncon.getStationDestination();
@@ -123,7 +124,7 @@ public class GraphTroncons {
 
 
 
-		Deque<Troncon> tronconList = new LinkedList<>();
+		/*Deque<Troncon> tronconList = new LinkedList<>();
 		Station stationtemp = stationDes;
 		Station stationTempDest = null;
 
@@ -136,6 +137,20 @@ public class GraphTroncons {
 				}
 			}
 			stationtemp = stationTempDest;
+		}
+*/
+
+		Deque<Troncon> tronconsDeque = new ArrayDeque<>();
+		Troncon troncon;
+		System.out.println("arriver : " + provenance.get(stationDes));
+		while((troncon = provenance.get(stationDes)) != null){
+			System.out.println("dans while");
+			tronconsDeque.addFirst(troncon);
+			stationDes = troncon.getStationDepart();
+		}
+
+		for (Troncon troncon1 : tronconsDeque) {
+			System.out.println(troncon1.getStationDepart() + " - " + troncon1.getStationDestination());
 		}
 
 		//afficherDeque(tronconList);
