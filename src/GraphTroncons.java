@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.*;
 
 import java.util.SortedSet;
 import javax.xml.parsers.DocumentBuilder;
@@ -98,7 +99,6 @@ public class GraphTroncons {
 
 	}
 
-
 	//bfs
 	Deque<Troncon> calculerCheminMinimisantNombreTroncons(String stationDepart, String stationDestination){
 		Station stationDep = new Station(stationDepart);
@@ -107,13 +107,17 @@ public class GraphTroncons {
 		HashMap<Station,Troncon> provenance = new HashMap<>();
 		LinkedList<Station> file = new LinkedList<>();
 		Set<Station> visite = new HashSet<>();
+
 		visite.add(stationDep);
 		file.addLast(stationDep);
 
 		while (!visite.contains(stationDes) && !file.isEmpty()) {
+
 			Station stationActuelleDepart = file.removeFirst();
+
 			for (Troncon troncon : stationTronconMap.get(stationActuelleDepart)) {
 				Station stationActuelleDest = troncon.getStationDestination();
+
 				if (!visite.contains(stationActuelleDest)) {
 					file.add(stationActuelleDest);
 					visite.add(stationActuelleDest);
@@ -122,56 +126,86 @@ public class GraphTroncons {
 			}
 		}
 
-
-
-		/*Deque<Troncon> tronconList = new LinkedList<>();
-		Station stationtemp = stationDes;
-		Station stationTempDest = null;
-
-		while (stationtemp.equals(stationDep)){
-			stationTempDest = provenance.get(stationtemp).getStationDepart();
-			for (Troncon troncon : stationTronconMap.get(stationTempDest)) {
-				if (troncon.getStationDestination().equals(stationtemp)){
-					tronconList.addFirst(troncon);
-					System.out.println(troncon.getStationDepart().toString());
-				}
-			}
-			stationtemp = stationTempDest;
-		}
-*/
-
 		Deque<Troncon> tronconsDeque = new ArrayDeque<>();
 		Troncon troncon;
 		System.out.println("arriver : " + provenance.get(stationDes));
 		while((troncon = provenance.get(stationDes)) != null){
-			System.out.println("dans while");
 			tronconsDeque.addFirst(troncon);
 			stationDes = troncon.getStationDepart();
 		}
+
+		toStringDeque(tronconsDeque);
+
+		return null;
+	}
+
+	public Deque<Troncon> calculerCheminMinimisantTempsTransport(String stationDep, String stationDes ) {
+		Station stationDepart = new Station(stationDep);
+		Station stationDestination = new Station(stationDes);
+		Map<Station, Integer> distances = new HashMap<>();
+		Map<Station, Station> provenance = new HashMap<>();
+		Set<Station> visites = new HashSet<>();
+		PriorityQueue<Station> filePriorite = new PriorityQueue<>((s1, s2) -> distances.get(s1) - distances.get(s2));
+
+		for (Station station : stationTronconMap.keySet()) {
+			distances.put(station, Integer.MAX_VALUE);
+		}
+		distances.put(stationDepart, 0);
+		filePriorite.offer(stationDepart);
+
+		while (!filePriorite.isEmpty()) {
+			Station station = filePriorite.poll();
+			if (visites.contains(station)) {
+				continue;
+			}
+			visites.add(station);
+			if (station.equals(stationDestination)) {
+				break;
+			}
+
+			for (Troncon troncon : stationTronconMap.get(station)) {
+				Station destination = troncon.getStationDestination();
+				if (visites.contains(destination)) {
+					continue;
+				}
+				int nouvelleDistance = distances.get(station) + troncon.getDureeTroncon();
+				if (nouvelleDistance < distances.get(destination)) {
+					distances.put(destination, nouvelleDistance);
+					provenance.put(destination, station);
+					filePriorite.offer(destination);
+				}
+			}
+		}
+
+
+		Deque<Troncon> itineraire = new ArrayDeque<>();
+		Station station = stationDestination;
+		while (provenance.containsKey(station)) {
+			Station predecesseur = provenance.get(station);
+			Troncon troncon = trouverTroncon(station, predecesseur, stationTronconMap, ligneTronconMap);
+			itineraire.addLast(troncon);
+			station = predecesseur;
+		}
+
+		toStringDeque(itineraire);
+		return itineraire;
+	}
+
+	private Troncon trouverTroncon(Station depart, Station destination, Map<Station, Set<Troncon>> stationTronconMap, Map<Ligne, Set<Troncon>> ligneTronconMap) {
+		for (Troncon troncon : stationTronconMap.get(depart)) {
+			if (troncon.getStationDestination().equals(destination)) {
+				return troncon;
+			}
+		}
+		return null;
+	}
+
+	private void toStringDeque(Deque<Troncon> tronconsDeque){
 
 		for (Troncon troncon1 : tronconsDeque) {
 			System.out.println(troncon1.getStationDepart() + " - " + troncon1.getStationDestination());
 		}
 
-		//afficherDeque(tronconList);
-
-		return null;
-	}
-
-
-
-		//djikstra
-	List<Troncon> calculerCheminMinimisantTempsTransport(Station stationDepart, Station stationDestination){
-	return null;
-	}
-
-
-
-	void afficherDeque(Deque<Troncon> deque){
-
-		for (Troncon troncon : deque) {
-			System.out.println(troncon.toString());
-		}
 	}
 
 }

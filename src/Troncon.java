@@ -1,3 +1,4 @@
+import java.util.Comparator;
 import java.util.Objects;
 
 public class Troncon {
@@ -70,5 +71,12 @@ public class Troncon {
         ", stationDestination= " + stationDestination +
         ", dureeTroncon= " + dureeTroncon +
         "}\n";
+  }
+
+  public class TronconComparator implements Comparator<Troncon> {
+    @Override
+    public int compare(Troncon s1, Troncon s2) {
+      return s1.dureeTroncon - s2.dureeTroncon;
+    }
   }
 }

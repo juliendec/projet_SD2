@@ -8,7 +8,7 @@ public class Main {
 			GraphTroncons g = new GraphTroncons(lignes,troncons);
 			g.calculerCheminMinimisantNombreTroncons("BOILEAU", "ALMA");
 			System.out.println("------------------------------");
-			//g.calculerCheminMinimisantTempsTransport("BOILEAU", "ALMA");
+			g.calculerCheminMinimisantTempsTransport("BOILEAU", "ALMA");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
