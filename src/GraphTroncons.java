@@ -228,6 +228,7 @@ public class GraphTroncons {
 								+ ", arrivee=" + troncon.getStationDestination()
 								+ ", duree= " + troncon.getDureeTroncon());
 		}
+		//TODO est ce que les donnee sont juste pour le plus court ? c est chelou par rapport a la fiche du prof
 	}
 
 }
