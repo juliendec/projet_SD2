@@ -200,12 +200,35 @@ public class GraphTroncons {
 		return null;
 	}
 
-	private void toStringDeque(Deque<Troncon> tronconsDeque){
+	private void toStringDeque(Deque<Troncon> tronconsDeque) {
+
+		Deque<Troncon> itineraire = new ArrayDeque<>();
+
+		itineraire.addLast(new Troncon(Integer.MIN_VALUE,null,null,Integer.MIN_VALUE));
 
 		for (Troncon troncon1 : tronconsDeque) {
-			System.out.println(troncon1.getStationDepart() + " - " + troncon1.getStationDestination());
+		//	System.out.println(troncon1.getNumeroLigne()  + " - "  + troncon1.getStationDepart() + " - " + troncon1.getStationDestination() + " - " + troncon1.getDureeTroncon());
+			Troncon tronconPrecedant = itineraire.getLast();
+			if (troncon1.getNumeroLigne() == tronconPrecedant.getNumeroLigne()) {
+				itineraire.removeLast();
+				Troncon tronconMix = new Troncon(troncon1.getNumeroLigne(), tronconPrecedant.getStationDepart(),
+						troncon1.getStationDestination(), troncon1.getDureeTroncon()
+						+ tronconPrecedant.getDureeTroncon()); //TODO additioner temps d attente moyenne ?
+				itineraire.addLast(tronconMix);
+			} else {
+				itineraire.addLast(troncon1);
+			}
 		}
 
+		itineraire.removeFirst();
+
+		for (Troncon troncon: itineraire) {
+			System.out.println("Deplacement [ligne=" + troncon.getNumeroLigne()
+								+ ", depart=" + troncon.getStationDepart()
+								+ ", arrivee=" + troncon.getStationDestination()
+								+ ", duree= " + troncon.getDureeTroncon());
+		}
 	}
 
 }
+
