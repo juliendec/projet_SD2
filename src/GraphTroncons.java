@@ -182,22 +182,22 @@ public class GraphTroncons {
 		Station station = stationDestination;
 		while (provenance.containsKey(station)) {
 			Station predecesseur = provenance.get(station);
-			Troncon troncon = trouverTroncon(station, predecesseur);
+
+			Troncon troncon = null;
+
+			for (Troncon tronconFor : stationTronconMap.get(station)) {
+				if (tronconFor.getStationDestination().equals(predecesseur)) {
+						troncon = tronconFor;
+						break;
+				}
+			}
+
 			itineraire.addLast(troncon);
 			station = predecesseur;
 		}
 
 		toStringDeque(itineraire);
 		return itineraire;
-	}
-
-	private Troncon trouverTroncon(Station depart, Station destination) {
-		for (Troncon troncon : stationTronconMap.get(depart)) {
-			if (troncon.getStationDestination().equals(destination)) {
-				return troncon;
-			}
-		}
-		return null;
 	}
 
 	private void toStringDeque(Deque<Troncon> tronconsDeque) {
