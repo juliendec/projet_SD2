@@ -236,6 +236,7 @@ public class GraphTroncons {
 
 		int dureeTransport = 0;
 		int dureeTotal = 0;
+		int nbrTronconTot = 0;
 
 		for (Troncon troncon: itineraire) {
 
@@ -243,16 +244,18 @@ public class GraphTroncons {
 			Ligne ligne = lignesSet.get(index);
 			dureeTotal += troncon.getDureeTroncon() + ligne.getTempAttente();
 			dureeTransport += troncon.getDureeTroncon();
+			int nbrTroncon = itineraireCouts.removeFirst();
+			nbrTronconTot += nbrTroncon;
 			System.out.println("Deplacement [ligne=" + troncon.getNumeroLigne()
 								+ ", depart=" + troncon.getStationDepart()
 								+ ", arrivee=" + troncon.getStationDestination()
 								+ ", duree= " + troncon.getDureeTroncon()
 								+ ", attente moyenne=" + ligne.getTempAttente()
 								+ ", type de transport=" + ligne.getTypeTransport()
-								+ ", nbr Troncon=" + itineraireCouts.removeFirst());
+								+ ", nbTroncon=" + nbrTroncon + ']');
 		}
 
-		System.out.println("dureeTransport=" + dureeTransport + " durreeTotal=" + dureeTotal);
+		System.out.println( "nbTroncon=" + nbrTronconTot + '\n' + "dureeTransport=" + dureeTransport + ", durreeTotal=" + dureeTotal);
 
 		//TODO ajouter direction de la ligne
 		//TODO est ce que les donnee sont juste pour le plus court ? c est chelou par rapport a la fiche du prof
