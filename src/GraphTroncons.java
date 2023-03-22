@@ -140,8 +140,8 @@ public class GraphTroncons {
 	}
 
 	public Deque<Troncon> calculerCheminMinimisantTempsTransport(String stationDep, String stationDes ) {
-		Station stationDepart = new Station(stationDep);
-		Station stationDestination = new Station(stationDes);
+		Station stationDepart = new Station(stationDes);
+		Station stationDestination = new Station(stationDep);
 		Map<Station, Integer> distances = new HashMap<>();
 		Map<Station, Station> provenance = new HashMap<>();
 		Set<Station> visites = new HashSet<>();
@@ -238,11 +238,16 @@ public class GraphTroncons {
 		int dureeTotal = 0;
 		int nbrTronconTot = 0;
 
+		Troncon tronconFinal = itineraire.getLast();
+
 		for (Troncon troncon: itineraire) {
 
 			int index = lignesSet.indexOf(new Ligne(troncon.getNumeroLigne(),null,null,null,null,0));
 			Ligne ligne = lignesSet.get(index);
-			dureeTotal += troncon.getDureeTroncon() + ligne.getTempAttente();
+			if (!troncon.equals(tronconFinal)){
+				dureeTotal+=  ligne.getTempAttente();
+			}
+			dureeTotal += troncon.getDureeTroncon();
 			dureeTransport += troncon.getDureeTroncon();
 			int nbrTroncon = itineraireCouts.removeFirst();
 			nbrTronconTot += nbrTroncon;
