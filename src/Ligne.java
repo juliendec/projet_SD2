@@ -31,6 +31,30 @@ public class Ligne {
     this.tempAttente = tempAttente;
   }
 
+  public int getId() {
+    return id;
+  }
+
+  public String getNumero() {
+    return numero;
+  }
+
+  public Station getStationDepart() {
+    return stationDepart;
+  }
+
+  public Station getStationDestination() {
+    return stationDestination;
+  }
+
+  public String getTypeTransport() {
+    return typeTransport;
+  }
+
+  public int getTempAttente() {
+    return tempAttente;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -42,33 +66,12 @@ public class Ligne {
 
     Ligne ligne = (Ligne) o;
 
-    if (id != ligne.id) {
-      return false;
-    }
-    if (tempAttente != ligne.tempAttente) {
-      return false;
-    }
-    if (!Objects.equals(numero, ligne.numero)) {
-      return false;
-    }
-    if (!Objects.equals(stationDepart, ligne.stationDepart)) {
-      return false;
-    }
-    if (!Objects.equals(stationDestination, ligne.stationDestination)) {
-      return false;
-    }
-    return Objects.equals(typeTransport, ligne.typeTransport);
+    return getId() == ligne.getId();
   }
 
   @Override
   public int hashCode() {
-    int result = id;
-    result = 31 * result + (numero != null ? numero.hashCode() : 0);
-    result = 31 * result + (stationDepart != null ? stationDepart.hashCode() : 0);
-    result = 31 * result + (stationDestination != null ? stationDestination.hashCode() : 0);
-    result = 31 * result + (typeTransport != null ? typeTransport.hashCode() : 0);
-    result = 31 * result + tempAttente;
-    return result;
+    return getId();
   }
 
   @Override

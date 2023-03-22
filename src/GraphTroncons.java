@@ -56,7 +56,7 @@ public class GraphTroncons {
 
 				Ligne ligneInstance = new Ligne(id, numero, stationDepart, stationArrive, typeTransport, dureeTroncon);
 
-
+				ligneTronconMap.put(ligneInstance,new HashSet<>());
 
 			//	System.out.println(ligneInstance.toString());
 			}
@@ -151,7 +151,7 @@ public class GraphTroncons {
 			distances.put(station, Integer.MAX_VALUE);
 		}
 		distances.put(stationDepart, 0);
-		filePriorite.offer(stationDepart);
+		filePriorite.add(stationDepart);
 
 		while (!filePriorite.isEmpty()) {
 			Station station = filePriorite.poll();
@@ -172,7 +172,7 @@ public class GraphTroncons {
 				if (nouvelleDistance < distances.get(destination)) {
 					distances.put(destination, nouvelleDistance);
 					provenance.put(destination, station);
-					filePriorite.offer(destination);
+					filePriorite.add(destination);
 				}
 			}
 		}
@@ -202,6 +202,8 @@ public class GraphTroncons {
 
 	private void toStringDeque(Deque<Troncon> tronconsDeque) {
 
+		List<Ligne> lignesSet = ligneTronconMap.keySet().stream().toList();
+
 		Deque<Troncon> itineraire = new ArrayDeque<>();
 
 		itineraire.addLast(new Troncon(Integer.MIN_VALUE,null,null,Integer.MIN_VALUE));
@@ -223,11 +225,17 @@ public class GraphTroncons {
 		itineraire.removeFirst();
 
 		for (Troncon troncon: itineraire) {
+
+			int index = lignesSet.indexOf(new Ligne(troncon.getNumeroLigne(),null,null,null,null,0));
+			Ligne ligne = lignesSet.get(index);
 			System.out.println("Deplacement [ligne=" + troncon.getNumeroLigne()
 								+ ", depart=" + troncon.getStationDepart()
 								+ ", arrivee=" + troncon.getStationDestination()
-								+ ", duree= " + troncon.getDureeTroncon());
+								+ ", duree= " + troncon.getDureeTroncon()
+								+ ", attente moyenne=" + ligne.getTempAttente()
+								+ ", type de transport=" + ligne.getTypeTransport());
 		}
+		//TODO ajouter nbrTroncon et direction de la ligne
 		//TODO est ce que les donnee sont juste pour le plus court ? c est chelou par rapport a la fiche du prof
 	}
 

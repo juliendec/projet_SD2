@@ -26,6 +26,6 @@ public class Station {
 
   @Override
   public String toString() {
-    return "nom station: " + nomStation +' ';
+    return  nomStation ;
   }
 }
