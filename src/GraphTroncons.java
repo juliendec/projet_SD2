@@ -205,8 +205,10 @@ public class GraphTroncons {
 		List<Ligne> lignesSet = ligneTronconMap.keySet().stream().toList();
 
 		Deque<Troncon> itineraire = new ArrayDeque<>();
+		Deque<Integer> itineraireCouts = new ArrayDeque<>();
 
 		itineraire.addLast(new Troncon(Integer.MIN_VALUE,null,null,Integer.MIN_VALUE));
+
 
 		for (Troncon troncon1 : tronconsDeque) {
 		//	System.out.println(troncon1.getNumeroLigne()  + " - "  + troncon1.getStationDepart() + " - " + troncon1.getStationDestination() + " - " + troncon1.getDureeTroncon());
@@ -215,27 +217,44 @@ public class GraphTroncons {
 				itineraire.removeLast();
 				Troncon tronconMix = new Troncon(troncon1.getNumeroLigne(), tronconPrecedant.getStationDepart(),
 						troncon1.getStationDestination(), troncon1.getDureeTroncon()
-						+ tronconPrecedant.getDureeTroncon()); //TODO additioner temps d attente moyenne ?
+						+ tronconPrecedant.getDureeTroncon());
 				itineraire.addLast(tronconMix);
+				int nbrTroncons = itineraireCouts.removeLast() +1;
+				if (nbrTroncons == 0){
+					itineraireCouts.addLast(1);
+				}else {
+					itineraireCouts.addLast(nbrTroncons);
+				}
+
 			} else {
+				itineraireCouts.addLast(1);
 				itineraire.addLast(troncon1);
 			}
 		}
 
 		itineraire.removeFirst();
 
+		int dureeTransport = 0;
+		int dureeTotal = 0;
+
 		for (Troncon troncon: itineraire) {
 
 			int index = lignesSet.indexOf(new Ligne(troncon.getNumeroLigne(),null,null,null,null,0));
 			Ligne ligne = lignesSet.get(index);
+			dureeTotal += troncon.getDureeTroncon() + ligne.getTempAttente();
+			dureeTransport += troncon.getDureeTroncon();
 			System.out.println("Deplacement [ligne=" + troncon.getNumeroLigne()
 								+ ", depart=" + troncon.getStationDepart()
 								+ ", arrivee=" + troncon.getStationDestination()
 								+ ", duree= " + troncon.getDureeTroncon()
 								+ ", attente moyenne=" + ligne.getTempAttente()
-								+ ", type de transport=" + ligne.getTypeTransport());
+								+ ", type de transport=" + ligne.getTypeTransport()
+								+ ", nbr Troncon=" + itineraireCouts.removeFirst());
 		}
-		//TODO ajouter nbrTroncon et direction de la ligne
+
+		System.out.println("dureeTransport=" + dureeTransport + " durreeTotal=" + dureeTotal);
+
+		//TODO ajouter direction de la ligne
 		//TODO est ce que les donnee sont juste pour le plus court ? c est chelou par rapport a la fiche du prof
 	}
 
