@@ -128,7 +128,6 @@ public class GraphTroncons {
 
 		Deque<Troncon> tronconsDeque = new ArrayDeque<>();
 		Troncon troncon;
-		System.out.println("arriver : " + provenance.get(stationDes));
 		while((troncon = provenance.get(stationDes)) != null){
 			tronconsDeque.addFirst(troncon);
 			stationDes = troncon.getStationDepart();
@@ -238,7 +237,6 @@ public class GraphTroncons {
 		Troncon tronconFinal = itineraire.getLast();
 
 		for (Troncon troncon: itineraire) {
-
 			int index = lignesSet.indexOf(new Ligne(troncon.getNumeroLigne(),null,null,null,null,0));
 			Ligne ligne = lignesSet.get(index);
 			if (!troncon.equals(tronconFinal)){
