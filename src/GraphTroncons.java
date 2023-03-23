@@ -139,63 +139,60 @@ public class GraphTroncons {
 		return null;
 	}
 
-	public Deque<Troncon> calculerCheminMinimisantTempsTransport(String stationDep, String stationDes ) {
-		Station stationDepart = new Station(stationDes);
-		Station stationDestination = new Station(stationDep);
-		Map<Station, Integer> distances = new HashMap<>();
-		Map<Station, Station> provenance = new HashMap<>();
-		Set<Station> visites = new HashSet<>();
-		PriorityQueue<Station> filePriorite = new PriorityQueue<>((s1, s2) -> distances.get(s1) - distances.get(s2));
+	public Deque<Troncon> calculerCheminMinimisantTempsTransport(String stationDepart, String stationDestination ) {
 
-		for (Station station : stationTronconMap.keySet()) {
-			distances.put(station, Integer.MAX_VALUE);
+		Station stationDes = new Station(stationDepart);
+		Station stationDep = new Station(stationDestination);
+		Map<Station,Integer> distance = new HashMap<>();
+		Map<Station,Station> provenance = new HashMap<>();
+		PriorityQueue<Station> filePriorite = new PriorityQueue<>((s1, s2) -> distance.get(s1) - distance.get(s2));
+		Set<Station> visite = new HashSet<>();
+
+		for (Station station:stationTronconMap.keySet()) {
+			distance.put(station,Integer.MAX_VALUE);
 		}
-		distances.put(stationDepart, 0);
-		filePriorite.add(stationDepart);
+		distance.put(stationDep,0);
+		filePriorite.add(stationDep);
 
-		while (!filePriorite.isEmpty()) {
+		while (!filePriorite.isEmpty()){
 			Station station = filePriorite.poll();
-			if (visites.contains(station)) {
+			if (visite.contains(station)){
 				continue;
 			}
-			visites.add(station);
-			if (station.equals(stationDestination)) {
+			visite.add(station);
+			if (station.equals(stationDestination)){
 				break;
 			}
 
-			for (Troncon troncon : stationTronconMap.get(station)) {
+			for (Troncon troncon : stationTronconMap.get(station)){
 				Station destination = troncon.getStationDestination();
-				if (visites.contains(destination)) {
+				if (visite.contains(destination)){
 					continue;
 				}
-				int nouvelleDistance = distances.get(station) + troncon.getDureeTroncon();
-				if (nouvelleDistance < distances.get(destination)) {
-					distances.put(destination, nouvelleDistance);
-					provenance.put(destination, station);
+				int nouvelleDistance = distance.get(station) + troncon.getDureeTroncon();
+				if (nouvelleDistance < distance.get(destination)){
+					distance.put(destination, nouvelleDistance);
+					provenance.put(destination,station);
 					filePriorite.add(destination);
 				}
 			}
 		}
 
-
 		Deque<Troncon> itineraire = new ArrayDeque<>();
-		Station station = stationDestination;
-		while (provenance.containsKey(station)) {
-			Station predecesseur = provenance.get(station);
-
+		Station station = stationDes;
+		while (provenance.containsKey(station)){
+			Station predcesseur = provenance.get(station);
 			Troncon troncon = null;
 
 			for (Troncon tronconFor : stationTronconMap.get(station)) {
-				if (tronconFor.getStationDestination().equals(predecesseur)) {
-						troncon = tronconFor;
-						break;
+				if (tronconFor.getStationDestination().equals(predcesseur)){
+					troncon = tronconFor;
+					break;
 				}
 			}
-
 			itineraire.addLast(troncon);
-			station = predecesseur;
+			station = predcesseur;
 		}
-
 		toStringDeque(itineraire);
 		return itineraire;
 	}
@@ -263,7 +260,6 @@ public class GraphTroncons {
 
 		System.out.println( "nbTroncon=" + nbrTronconTot + '\n' + "dureeTransport=" + dureeTransport + ", durreeTotal=" + dureeTotal);
 
-		//TODO est ce que les donnee sont juste pour le plus court ? c est chelou par rapport a la fiche du prof
 	}
 
 }
